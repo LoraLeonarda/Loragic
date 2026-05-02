@@ -6,9 +6,10 @@ Esse sistema simples foi criado para resolver problemas simples de classificaç�
 ## Funcionalidades
 
 - Armazenamento de **fatos** (afirmações verdadeiras).
-- Definição de **regras** no formato: `se (condição1 E condição2 E ...) então (fato_conclusão)`.
+- Definição de **regras** no formato: `se (condição1 OU (condição2 E !condição3) OU ...) então (fato_conclusão)`.
 - Motor de inferência **forward chaining** (encadeamento para frente): aplica regras repetidamente até que nenhum fato novo possa ser deduzido.
 - API simples para adicionar fatos, adicionar regras e processar a base de conhecimento.
+- Vetor de condições de uma regra é um OR de ANDs, e o prefixo `!` pode ser utilizado para NOT.
 
 ## Como funciona
 
@@ -40,7 +41,8 @@ Gerencia fatos, regras e executa a inferência.
 | `apagar_fatos()`                | Remove todos os fatos. |
 | `apagar_regras()`               | Remove todas as regras. |
 | `adicionar_fato(string fato)`   | Insere um fato na base. |
-| `adicionar_regra(string fato, vector<string> condicoes)` | Adiciona uma regra. |
+| `adicionar_regra(string fato, vector<vector<string>> condicoes)` | Adiciona uma regra. |
+| `adicionar_regra_simples(string fato, vector<string> condicoes)` | Adiciona uma regra composta somente por ANDs. |
 | `eh_fato(string fato)`          | Verifica se um fato já está presente. |
 | `processar()`                   | Aplica as regras até saturação. |
 
@@ -60,9 +62,9 @@ int main() {
 
     // Adiciona regras
     // Se tem penas E tem bico E voa -> passaro
-    motor.adicionar_regra("passaro", {"tem_penas", "tem_bico", "voa"});
+    motor.adicionar_regra("passaro", {{"tem_penas", "tem_bico", "voa"}});
     // Se tem_pernas E tem_penas -> vertebrado
-    motor.adicionar_regra("vertebrado", {"tem_pernas", "tem_penas"});
+    motor.adicionar_regra("vertebrado", {{"tem_pernas", "tem_penas"}});
 
     // Processa
     motor.processar();
